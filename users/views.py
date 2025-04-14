@@ -4,18 +4,21 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework import generics
 from rest_framework.response import Response
 from rest_framework import status
-from django.contrib.auth.models import User
-from .serializers import RegisterSerializer
+from .models import TelegramUser
+from .serializers import TelegramUserSerializer, BalanceSerializer
 
-class RegisterAPIView(generics.CreateAPIView):
-    queryset = User.objects.all()
-    serializer_class = RegisterSerializer
 
-    def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        user = serializer.save()
-        return Response({"message": "Пользователь успешно зарегистрирован!"}, status=status.HTTP_201_CREATED)
+class RegisterTelegramUser(APIView):
+    def post(self, request):
+        telegram_id = request.data.get("telegram_id")
+        username = request.data.get("username")
+
+        user, created = TelegramUser.objects.get_or_create(
+            telegram_id=telegram_id,
+            defaults={"username": username}
+        )
+        serializer = TelegramUserSerializer(user)
+        return Response(serializer.data)
 
 
 class BalanceView(APIView):
@@ -23,18 +26,32 @@ class BalanceView(APIView):
 
     def get(self, request):
         profile = request.user.userprofile
+        serializer = BalanceSerializer(profile)
+        return Response(serializer.data)
+
+    def post(self, request):
+        profile = request.user.userprofile
+        amount = request.data.get('amount')
+
+        try:
+            amount = float(amount)
+        except (ValueError, TypeError):
+            return Response({'error': 'Неверная сумма'}, status=400)
+
+        if amount <= 0:
+            return Response({'error': 'Сумма должна быть положительной'}, status=400)
+
+        profile.balance += amount
+        profile.save()
         return Response({'balance': profile.balance})
+
+
+class DepositView(APIView):
+    permission_classes = [IsAuthenticated]
 
     def post(self, request):
         amount = request.data.get('amount')
-        if not amount:
-            return Response({'error': 'Укажи сумму'}, status=400)
-        try:
-            amount = float(amount)
-        except ValueError:
-            return Response({'error': 'Неверная сумма'}, status=400)
-
-        profile = request.user.userprofile
-        profile.balance += amount
+        profile = request.user.profile
+        profile.balance += int(amount)
         profile.save()
-        return Response({'balance': profile.balance}, status=status.HTTP_200_OK)
+        return Response({'balance': profile.balance})

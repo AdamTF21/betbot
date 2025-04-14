@@ -23,6 +23,7 @@ INSTALLED_APPS = [
     'bets.apps.BetsConfig',
     'matches.apps.MatchesConfig',
     'users.apps.UsersConfig',
+
     
     'rest_framework',
     'rest_framework.authtoken',
@@ -40,13 +41,15 @@ MIDDLEWARE = [
 ]
 
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES':  ('rest_framework_simplejwt.authentication.JWTAuthentication',),
-    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema'
-
+    'DEFAULT_AUTHENTICATION_CLASSES':(
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+        'rest_framework.authentication.TokenAuthentication'),
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
 
 }
 
 
+AUTH_USER_MODEL = 'users.TelegramUser'
 
 ROOT_URLCONF = 'bet_bot.urls'
 

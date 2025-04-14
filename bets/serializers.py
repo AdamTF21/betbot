@@ -1,12 +1,12 @@
 from rest_framework import serializers
-from django.contrib.auth.models import User
 from .models import Bet
 
 
 class BetSerializer(serializers.ModelSerializer):
     class Meta:
         model = Bet
-        fields = 'all'
+        fields = ['id', 'user', 'match', 'amount', ]
+        read_only_fields = ['id', 'user',]
 
     def validate(self, data):
         user = self.context['request'].user

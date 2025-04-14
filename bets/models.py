@@ -1,6 +1,7 @@
 from django.db import models
 from django.conf import settings
-from matches.models import Match
+from matches.models import Match, BetOption
+
 
 class Bet(models.Model):
     user = models.ForeignKey(
@@ -13,6 +14,7 @@ class Bet(models.Model):
         on_delete=models.CASCADE,
         verbose_name='Матч'
     )
+    option = models.ForeignKey(BetOption, on_delete=models.CASCADE)
     chosen_winner = models.CharField(
         max_length=20,
         choices=[('team1', 'Team 1'), ('team2', 'Team 2'), ('draw', 'Draw')],
@@ -24,8 +26,16 @@ class Bet(models.Model):
         verbose_name='Сумма'
 
     )
-    odds = models.FloatField()
-    is_won = models.BooleanField(null=True, blank=True)
+    is_won = models.BooleanField(
+        null=True,
+        blank=True
+    )
+    payout = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        default=0
+    )
+
 
     class Meta:
         verbose_name= 'Ставка'
@@ -33,5 +43,5 @@ class Bet(models.Model):
         ordering = ['-amount']
 
 
-    def str(self):
+    def __str__(self):
         return f"{self.user.username} поставил на {self.chosen_winner} — {self.amount} руб."

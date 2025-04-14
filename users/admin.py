@@ -1,10 +1,14 @@
 from django.contrib import admin
+from .models import TelegramUser
 
-from django.contrib import admin
-from .models import UserProfile
+@admin.register(TelegramUser)
+class User(admin.ModelAdmin):
+    list_display = ('id', 'first_name', 'last_name', 'telegram_id', 'balance' )
 
-@admin.register(UserProfile)
-class ProfileAdmin(admin.ModelAdmin):
-    list_display = ('user', 'balance')
-    search_fields = ('user__username',)
+
+
+
+
+
+
 
