@@ -6,7 +6,7 @@ authors = ["AdamTF21 <beka.0817a@gmail.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.10"
+python = ">=3.10,<3.14"
 django = "^5.2"
 telebot = "^0.0.5"
 python-telegram-bot = "^22.0"
@@ -16,6 +16,10 @@ drf-spectacular = "^0.28.0"
 drf-yasg = "^1.21.10"
 aiogram = "^3.19.0"
 python-dotenv = "^1.1.0"
+pyproject-toml = "^0.1.0"
+apscheduler = "^3.11.0"
+asgiref = "^3.8.1"
+django-jazzmin = "^3.0.1"
 
 
 [build-system]

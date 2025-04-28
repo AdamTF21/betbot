@@ -1,26 +1,19 @@
 from rest_framework import serializers
-from .models import Bet
+from .models import Bet, BetOption
 
 
 class BetSerializer(serializers.ModelSerializer):
+    user_id = serializers.IntegerField(write_only=True)
+    match_id = serializers.IntegerField(write_only=True)
+    option_id = serializers.IntegerField(write_only=True)
+
     class Meta:
         model = Bet
-        fields = ['id', 'user', 'match', 'amount', ]
-        read_only_fields = ['id', 'user',]
+        fields = ['id', 'amount', 'user_id', 'match_id', 'option_id']
+        read_only_fields = ['id', 'user', 'match', 'option']
 
-    def validate(self, data):
-        user = self.context['request'].user
-        profile = user.userprofile
 
-        if profile.balance < data['amount']:
-            raise serializers.ValidationError("Недостаточно средств!")
-
-        return data
-
-    def create(self, validated_data):
-        user = self.context['request'].user
-        amount = validated_data['amount']
-        user_profile = user.userprofile
-        user_profile.balance -= amount
-        user_profile.save()
-        return super().create(validated_data)
+class BetOptionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = BetOption
+        fields = ['id', 'name', 'coefficient']

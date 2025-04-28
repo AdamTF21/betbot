@@ -15,10 +15,9 @@ async def start_handler(message: Message, state: FSMContext):
     user = await get_user_by_telegram_id(telegram_id)
 
     if user:
-        await message.answer(f"Добро пожаловать обратно {user.first_name}!", reply_markup=get_main_menu_keyboard())
+        await message.answer(f"Добро пожаловать обратно {user['first_name']}!", reply_markup=get_main_menu_keyboard())
     else:
         await message.answer(f"Добро пожаловать в бота для ставок 🎰.\n Вы не зарегистрированы. Пожалуйста, зарегистрируйтесь:", reply_markup=get_register_keyboard())
-
 
 @router.callback_query(F.data == "register")
 async def register_start(callback: CallbackQuery, state: FSMContext):
@@ -41,5 +40,5 @@ async def process_last_name(message: Message, state: FSMContext):
     telegram_id = message.from_user.id
 
     await register_user(telegram_id=telegram_id, first_name=first_name, last_name=last_name)
-    await message.answer("Регистрация завершена!🎉\n Выберите действие.", reply_markup=get_main_menu_keyboard())
+    await message.answer("Регистрация успешно завершена!🎉\n ", reply_markup=get_main_menu_keyboard())
     await state.clear()

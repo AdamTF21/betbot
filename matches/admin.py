@@ -1,6 +1,8 @@
 from django.contrib import admin
 from .models import Match
+from bets.models import BetOption
 from .utils import calculate_bets
+
 
 @admin.register(Match)
 class MatchAdmin(admin.ModelAdmin):
@@ -10,8 +12,11 @@ class MatchAdmin(admin.ModelAdmin):
         super().save_model(request, obj, form, change)
 
         if obj.is_finished and obj.winner:
-            winning_options = obj.bet_options.filter(option=obj.winner)
-            winning_option_ids = list(winning_options.values_list('id', flat=True))
-            calculate_bets(obj, winning_option_ids)
+            try:
+                winning_option = obj.bet_options.get(option=obj.winner)
+                calculate_bets(obj, winning_option.id)
+            except BetOption.DoesNotExist:
+                pass
+
 
 

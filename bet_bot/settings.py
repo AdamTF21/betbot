@@ -1,8 +1,7 @@
 from pathlib import Path
 from django.conf.global_settings import AUTH_USER_MODEL
+
 BASE_DIR = Path(__file__).resolve().parent.parent
-
-
 
 SECRET_KEY = 'django-insecure-**jru&0g$k3q)ui&hg4s@q5)hp!2q(y*+@er@13w9)zn#ja+n7'
 
@@ -10,9 +9,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-
-
 INSTALLED_APPS = [
+    'jazzmin',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -24,10 +22,10 @@ INSTALLED_APPS = [
     'matches.apps.MatchesConfig',
     'users.apps.UsersConfig',
 
-    
     'rest_framework',
     'rest_framework.authtoken',
     'drf_spectacular',
+
 ]
 
 MIDDLEWARE = [
@@ -41,13 +39,12 @@ MIDDLEWARE = [
 ]
 
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES':(
+    'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
         'rest_framework.authentication.TokenAuthentication'),
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
 
 }
-
 
 AUTH_USER_MODEL = 'users.TelegramUser'
 
@@ -72,16 +69,12 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'bet_bot.wsgi.application'
 
-
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
-
-
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -98,19 +91,14 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
-
 LANGUAGE_CODE = 'ru-ru'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = ('Asia/Bishkek')
 
 USE_I18N = True
 
 USE_TZ = True
 
-
-
 STATIC_URL = 'static/'
-
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
